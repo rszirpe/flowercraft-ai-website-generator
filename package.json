@@ -1,0 +1,28 @@
+{
+  "name": "flowercraft-ai-website-generator",
+  "version": "1.0.0",
+  "description": "🌸 Beautiful AI-powered website generator with flower-inspired design and Google Gemini AI",
+  "scripts": {
+    "start": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "backend": "cd backend && python main.py",
+    "frontend": "cd frontend && npm run dev",
+    "install-all": "cd backend && pip install -r requirements.txt && cd ../frontend && npm install",
+    "build": "cd frontend && npm run build",
+    "setup": "npm run install-all && echo 'Setup complete! Run npm start to launch the application.'"
+  },
+  "keywords": [
+    "ai",
+    "website-generator",
+    "gemini",
+    "nextjs",
+    "fastapi",
+    "flower-design",
+    "beautiful-ui",
+    "organic-design"
+  ],
+  "author": "Rishi",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
