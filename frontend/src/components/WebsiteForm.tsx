@@ -164,55 +164,55 @@ export default function WebsiteForm({ onWebsiteGenerated }: WebsiteFormProps) {
   }
 
   return (
-    <div className="max-w-5xl mx-auto">
-      <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/30 p-8 md:p-12 space-y-10">
+    <div className="max-w-3xl mx-auto">
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 space-y-8">
         <div className="text-center mb-8">
-            <h3 className="text-3xl md:text-4xl font-black text-gray-900 mb-4">
-              🎨 Build Your Professional Website
-            </h3>
-            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-              Share your vision and let our advanced AI create a custom, responsive website that perfectly represents your brand!
+            <h2 className="text-2xl font-semibold text-gray-900 mb-3">
+              Create your website
+            </h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Describe your vision and our AI will generate a beautiful, professional website tailored to your needs.
             </p>
         </div>
         
         {error && (
-          <div className="bg-gradient-to-r from-red-50 to-pink-50 border-2 border-red-200 text-red-700 px-6 py-4 rounded-2xl flex items-center space-x-3 shadow-lg">
-            <span className="text-2xl">⚠️</span>
-            <span className="font-semibold">{error}</span>
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center space-x-2">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span className="text-sm font-medium">{error}</span>
           </div>
         )}
         
         <form onSubmit={handleSubmit} className="space-y-8">
         
-        {/* Business Name & Type */}
-        <div className="grid md:grid-cols-2 gap-8">
+        {/* Business Name & Type - ChatGPT style */}
+        <div className="grid md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <label className="flex items-center text-lg font-bold text-gray-800 mb-3">
-              <span className="mr-2">🏢</span>
-              Business/Project Name *
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Business Name *
             </label>
             <input
               type="text"
               value={formData.business_name}
               onChange={(e) => setFormData(prev => ({ ...prev, business_name: e.target.value }))}
-              placeholder="e.g., TechStart Solutions"
-              className="w-full px-6 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 transition-all duration-300 text-lg bg-white/50 backdrop-blur-sm hover:bg-white/80"
+              placeholder="Enter your business name"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors bg-white"
               required
             />
           </div>
 
           <div className="space-y-2">
-            <label className="flex items-center text-lg font-bold text-gray-800 mb-3">
-              <span className="mr-2">🎯</span>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               Website Type *
             </label>
             <select
               value={formData.website_type}
               onChange={(e) => setFormData(prev => ({ ...prev, website_type: e.target.value }))}
-              className="w-full px-6 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 transition-all duration-300 text-lg bg-white/50 backdrop-blur-sm hover:bg-white/80"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors bg-white"
               required
             >
-              <option value="">Select website type</option>
+              <option value="">Choose a type</option>
               {websiteTypes.map(type => (
                 <option key={type} value={type}>{type}</option>
               ))}
@@ -220,45 +220,44 @@ export default function WebsiteForm({ onWebsiteGenerated }: WebsiteFormProps) {
           </div>
         </div>
 
-        {/* Description */}
+        {/* Description - ChatGPT style */}
         <div className="space-y-2">
-          <label className="flex items-center text-lg font-bold text-gray-800 mb-3">
-            <span className="mr-2">📝</span>
-            Tell Us About Your Vision *
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Describe your vision *
           </label>
           <textarea
             value={formData.description}
             onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-            placeholder="Describe your business, what you do, and what makes you special. The more details, the better your AI-generated website will be!"
+            placeholder="Tell us about your business, what you do, and what makes you unique. The more detail you provide, the better your website will be."
             rows={4}
-            className="w-full px-6 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 transition-all duration-300 text-lg bg-white/50 backdrop-blur-sm hover:bg-white/80 resize-none"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors bg-white resize-none"
             required
           />
         </div>
 
-        {/* Target Audience & Color Scheme */}
+        {/* Target Audience & Color Scheme - ChatGPT style */}
         <div className="grid md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              Target Audience
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Target audience
             </label>
             <input
               type="text"
               value={formData.target_audience}
               onChange={(e) => setFormData(prev => ({ ...prev, target_audience: e.target.value }))}
-              placeholder="e.g., Young professionals, families, businesses"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              placeholder="Who is this website for?"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors bg-white"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              Color Scheme
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Color scheme
             </label>
             <select
               value={formData.color_scheme}
               onChange={(e) => setFormData(prev => ({ ...prev, color_scheme: e.target.value }))}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors bg-white"
             >
               <option value="">Let AI choose</option>
               {colorSchemes.map(scheme => (
@@ -268,25 +267,38 @@ export default function WebsiteForm({ onWebsiteGenerated }: WebsiteFormProps) {
           </div>
         </div>
 
-        {/* Features */}
+        {/* Features - ChatGPT style */}
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-3">
-            Features to Include
+          <label className="block text-sm font-medium text-gray-700 mb-3">
+            Features to include (optional)
           </label>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {availableFeatures.map(feature => (
-              <button
+              <label
                 key={feature}
-                type="button"
-                onClick={() => formData.features.includes(feature) ? removeFeature(feature) : addFeature(feature)}
-                className={`p-3 text-sm rounded-lg border transition-all ${
-                  formData.features.includes(feature)
-                    ? 'bg-blue-50 border-blue-500 text-blue-700'
-                    : 'bg-gray-50 border-gray-300 text-gray-700 hover:bg-gray-100'
-                }`}
+                className="relative flex items-center p-3 text-sm rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors"
               >
-                {feature}
-              </button>
+                <input
+                  type="checkbox"
+                  checked={formData.features.includes(feature)}
+                  onChange={() => formData.features.includes(feature) ? removeFeature(feature) : addFeature(feature)}
+                  className="sr-only"
+                />
+                <div className={`flex-shrink-0 w-4 h-4 border border-gray-300 rounded mr-3 flex items-center justify-center transition-colors ${
+                  formData.features.includes(feature) 
+                    ? 'bg-emerald-600 border-emerald-600' 
+                    : 'bg-white'
+                }`}>
+                  {formData.features.includes(feature) && (
+                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  )}
+                </div>
+                <span className={`text-sm ${formData.features.includes(feature) ? 'text-gray-900 font-medium' : 'text-gray-700'}`}>
+                  {feature}
+                </span>
+              </label>
             ))}
           </div>
           {formData.features.length > 0 && (
@@ -361,32 +373,28 @@ export default function WebsiteForm({ onWebsiteGenerated }: WebsiteFormProps) {
           </div>
         </div>
 
-        {/* Submit Button */}
-        <div className="pt-8">
-          <div className="relative group">
-            <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 rounded-3xl blur opacity-30 group-hover:opacity-70 transition duration-1000 group-hover:duration-200 animate-glow"></div>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="relative w-full bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 text-white py-6 px-8 rounded-3xl text-xl font-black hover:from-purple-700 hover:via-pink-700 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-[1.02] shadow-2xl"
-            >
-              {isSubmitting ? (
-                <span className="flex items-center justify-center gap-3">
-                  <div className="w-6 h-6 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
-                  <span className="text-lg">🚀 Creating Your Website...</span>
-                </span>
-              ) : (
-                <span className="flex items-center justify-center gap-3">
-                  <span className="text-2xl">🚀</span>
-                  <span>Create My Professional Website</span>
-                  <span className="text-2xl">✨</span>
-                </span>
-              )}
-            </button>
-          </div>
-              <p className="text-center text-gray-600 mt-4 text-sm">
-                🔒 Secure & Private • ⚡ Lightning Fast Generation • 🎉 Ready-to-Deploy Code
-              </p>
+        {/* ChatGPT-style Submit Button */}
+        <div className="pt-6">
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full bg-emerald-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all duration-200 shadow-sm"
+          >
+            {isSubmitting ? (
+              <span className="flex items-center justify-center gap-2">
+                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Generating website...
+              </span>
+            ) : (
+              'Generate website'
+            )}
+          </button>
+          <p className="text-center text-gray-500 mt-4 text-sm">
+            Your website will be generated in seconds using AI
+          </p>
         </div>
         </form>
       </div>
