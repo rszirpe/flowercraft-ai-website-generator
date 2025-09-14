@@ -166,17 +166,17 @@ export default function WebsiteForm({ onWebsiteGenerated }: WebsiteFormProps) {
   return (
     <div className="w-full">
       <div className="space-y-6">
-        <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 bg-clip-text text-transparent mb-3">
-              ✨ Describe Your Vision
+        <div className="text-center mb-8">
+            <h2 className="text-2xl font-semibold text-white mb-2">
+              Create Your Website
             </h2>
-            <p className="text-gray-700 text-sm">
-              Our enhanced Gemini 2.0 Flash AI will craft something extraordinary
+            <p className="text-white/60 text-sm">
+              Powered by Gemini 2.0 Flash AI for exceptional results
             </p>
         </div>
         
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center space-x-2">
+          <div className="bg-red-500/20 backdrop-blur-xl border border-red-500/30 text-red-300 px-4 py-3 rounded-xl flex items-center space-x-2">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
@@ -184,113 +184,130 @@ export default function WebsiteForm({ onWebsiteGenerated }: WebsiteFormProps) {
           </div>
         )}
         
-        <form onSubmit={handleSubmit} className="space-y-8">
+        <form onSubmit={handleSubmit} className="space-y-6">
         
-        {/* MAGICAL COMPACT FORM */}
-        <div className="grid grid-cols-2 gap-4">
+        {/* iOS-STYLE INPUTS */}
+        <div className="space-y-4">
           <div>
+            <label className="block text-white/60 text-xs font-medium uppercase tracking-wider mb-2">Business Name</label>
             <input
               type="text"
               value={formData.business_name}
               onChange={(e) => setFormData(prev => ({ ...prev, business_name: e.target.value }))}
-              placeholder="✨ Business Name"
-              className="w-full px-4 py-3 border-2 border-purple-200 rounded-xl focus:ring-4 focus:ring-purple-500/30 focus:border-purple-500 transition-all duration-300 bg-white/90 backdrop-blur-sm hover:bg-white"
+              placeholder="Enter your business name"
+              className="w-full px-4 py-3 bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl text-white placeholder-white/40 focus:bg-white/15 focus:border-white/30 focus:outline-none transition-all duration-200"
               required
             />
           </div>
 
           <div>
+            <label className="block text-white/60 text-xs font-medium uppercase tracking-wider mb-2">Website Type</label>
             <select
               value={formData.website_type}
               onChange={(e) => setFormData(prev => ({ ...prev, website_type: e.target.value }))}
-              className="w-full px-4 py-3 border-2 border-purple-200 rounded-xl focus:ring-4 focus:ring-purple-500/30 focus:border-purple-500 transition-all duration-300 bg-white/90 backdrop-blur-sm hover:bg-white"
+              className="w-full px-4 py-3 bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl text-white focus:bg-white/15 focus:border-white/30 focus:outline-none transition-all duration-200 appearance-none"
+              style={{ backgroundImage: "url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27white%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%27%3e%3c/polyline%3e%3c/svg%3e')", backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem center', backgroundSize: '1em' }}
               required
             >
-              <option value="">🎯 Website Type</option>
+              <option value="" className="bg-black/90">Select a type</option>
               {websiteTypes.map(type => (
-                <option key={type} value={type}>{type}</option>
+                <option key={type} value={type} className="bg-black/90">{type}</option>
               ))}
             </select>
           </div>
         </div>
 
-        {/* MAGICAL DESCRIPTION */}
+        {/* iOS-STYLE DESCRIPTION */}
         <div>
+          <label className="block text-white/60 text-xs font-medium uppercase tracking-wider mb-2">Description</label>
           <textarea
             value={formData.description}
             onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-            placeholder="🌟 Describe your vision... Our enhanced AI will create magic from your words!"
-            rows={3}
-            className="w-full px-4 py-3 border-2 border-purple-200 rounded-xl focus:ring-4 focus:ring-purple-500/30 focus:border-purple-500 transition-all duration-300 bg-white/90 backdrop-blur-sm hover:bg-white resize-none"
+            placeholder="Describe your website vision in detail..."
+            rows={4}
+            className="w-full px-4 py-3 bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl text-white placeholder-white/40 focus:bg-white/15 focus:border-white/30 focus:outline-none transition-all duration-200 resize-none"
             required
           />
         </div>
 
-        {/* COMPACT MAGICAL INPUTS */}
+        {/* iOS-STYLE ADDITIONAL OPTIONS */}
         <div className="grid grid-cols-2 gap-4">
-          <input
-            type="text"
-            value={formData.target_audience}
-            onChange={(e) => setFormData(prev => ({ ...prev, target_audience: e.target.value }))}
-            placeholder="👥 Target Audience"
-            className="w-full px-4 py-3 border-2 border-purple-200 rounded-xl focus:ring-4 focus:ring-purple-500/30 focus:border-purple-500 transition-all duration-300 bg-white/90 backdrop-blur-sm hover:bg-white"
-          />
-
-          <select
-            value={formData.color_scheme}
-            onChange={(e) => setFormData(prev => ({ ...prev, color_scheme: e.target.value }))}
-            className="w-full px-4 py-3 border-2 border-purple-200 rounded-xl focus:ring-4 focus:ring-purple-500/30 focus:border-purple-500 transition-all duration-300 bg-white/90 backdrop-blur-sm hover:bg-white"
-          >
-            <option value="">🎨 Let AI Choose Colors</option>
-            {colorSchemes.map(scheme => (
-              <option key={scheme} value={scheme}>{scheme}</option>
-            ))}
-          </select>
-        </div>
-
-        {/* MAGICAL QUICK FEATURES */}
-        <div className="grid grid-cols-3 gap-2">
-          {['Contact Form', 'Image Gallery', 'Team Members', 'Testimonials', 'Services Section', 'Portfolio Gallery'].map(feature => (
-            <button
-              key={feature}
-              type="button"
-              onClick={() => formData.features.includes(feature) ? removeFeature(feature) : addFeature(feature)}
-              className={`px-3 py-2 text-xs font-medium rounded-xl border-2 transition-all duration-300 ${
-                formData.features.includes(feature)
-                  ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white border-purple-500 shadow-lg shadow-purple-500/30'
-                  : 'bg-white/70 text-purple-700 border-purple-200 hover:bg-white hover:border-purple-300'
-              }`}
-            >
-              {feature}
-            </button>
-          ))}
-        </div>
-
-        {/* SPECTACULAR GENERATE BUTTON */}
-        <div className="pt-4">
-          <div className="relative group">
-            <div className="absolute -inset-1 bg-gradient-to-r from-pink-600 via-purple-600 via-indigo-600 to-cyan-600 rounded-2xl blur opacity-75 group-hover:opacity-100 animate-gradient transition-all duration-500"></div>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="relative w-full bg-gradient-to-r from-pink-500 via-purple-500 via-indigo-500 to-cyan-500 text-white py-4 px-8 rounded-2xl font-black text-lg hover:from-pink-600 hover:via-purple-600 hover:to-cyan-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105 shadow-2xl shadow-purple-500/50 animate-pulse-glow"
-            >
-              {isSubmitting ? (
-                <span className="flex items-center justify-center gap-3">
-                  <div className="w-6 h-6 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
-                  <span className="animate-pulse">🌸 Creating Magic...</span>
-                </span>
-              ) : (
-                <span className="flex items-center justify-center gap-3">
-                  <span className="text-2xl animate-bounce">🚀</span>
-                  <span>Generate My Magical Website</span>
-                  <span className="text-2xl animate-bounce animation-delay-500">✨</span>
-                </span>
-              )}
-            </button>
+          <div>
+            <label className="block text-white/60 text-xs font-medium uppercase tracking-wider mb-2">Target Audience</label>
+            <input
+              type="text"
+              value={formData.target_audience}
+              onChange={(e) => setFormData(prev => ({ ...prev, target_audience: e.target.value }))}
+              placeholder="e.g., Young professionals"
+              className="w-full px-4 py-3 bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl text-white placeholder-white/40 focus:bg-white/15 focus:border-white/30 focus:outline-none transition-all duration-200"
+            />
           </div>
-          <p className="text-center text-white/80 mt-3 text-sm font-medium filter drop-shadow-sm">
-            🌟 Enhanced with Gemini 2.0 Flash • 🎨 Thoughtful AI Creation • ⚡ Instant Magic
+
+          <div>
+            <label className="block text-white/60 text-xs font-medium uppercase tracking-wider mb-2">Color Scheme</label>
+            <select
+              value={formData.color_scheme}
+              onChange={(e) => setFormData(prev => ({ ...prev, color_scheme: e.target.value }))}
+              className="w-full px-4 py-3 bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl text-white focus:bg-white/15 focus:border-white/30 focus:outline-none transition-all duration-200 appearance-none"
+              style={{ backgroundImage: "url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27white%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%27%3e%3c/polyline%3e%3c/svg%3e')", backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem center', backgroundSize: '1em' }}
+            >
+              <option value="" className="bg-black/90">AI Chooses</option>
+              {colorSchemes.map(scheme => (
+                <option key={scheme} value={scheme} className="bg-black/90">{scheme}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* iOS-STYLE FEATURE TOGGLES */}
+        <div>
+          <label className="block text-white/60 text-xs font-medium uppercase tracking-wider mb-3">Features</label>
+          <div className="grid grid-cols-2 gap-3">
+            {['Contact Form', 'Image Gallery', 'Team Members', 'Testimonials', 'Services', 'Portfolio'].map(feature => (
+              <button
+                key={feature}
+                type="button"
+                onClick={() => formData.features.includes(feature) ? removeFeature(feature) : addFeature(feature)}
+                className={`px-4 py-3 rounded-xl font-medium text-sm transition-all duration-200 flex items-center justify-between ${
+                  formData.features.includes(feature)
+                    ? 'bg-blue-500/20 border border-blue-500/50 text-blue-400'
+                    : 'bg-white/5 border border-white/10 text-white/60 hover:bg-white/10'
+                }`}
+              >
+                <span>{feature}</span>
+                {formData.features.includes(feature) && (
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* iOS-STYLE GENERATE BUTTON */}
+        <div className="pt-2">
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-4 px-8 rounded-2xl font-semibold text-base hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg"
+          >
+            {isSubmitting ? (
+              <span className="flex items-center justify-center gap-3">
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <span>Generating...</span>
+              </span>
+            ) : (
+              <span className="flex items-center justify-center gap-2">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                <span>Generate Website</span>
+              </span>
+            )}
+          </button>
+          <p className="text-center text-white/40 mt-3 text-xs">
+            Powered by Gemini 2.0 Flash • Generates in ~5 seconds
           </p>
         </div>
         </form>

@@ -5,16 +5,29 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    overflow: hidden; /* Prevent scrolling */
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   
   body {
     @apply antialiased;
     background: #000;
     min-height: 100vh;
-    overflow: hidden; /* No scrolling */
+    overflow: hidden;
     margin: 0;
     padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+  
+  /* iOS-style focus states */
+  *:focus {
+    outline: none;
+  }
+  
+  /* Smooth transitions globally */
+  * {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
 
@@ -40,29 +53,29 @@
 }
 
 @layer utilities {
-  /* SPECTACULAR ANIMATIONS FOR STUNNING BEAUTY */
+  /* iOS-STYLE REFINED ANIMATIONS */
   .animate-float {
-    animation: float 6s ease-in-out infinite;
+    animation: float 8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
   }
   
   .animate-glow {
-    animation: glow 2s ease-in-out infinite alternate;
+    animation: glow 3s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
   }
   
   .animate-slide-up {
-    animation: slideUp 0.6s ease-out;
+    animation: slideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
   
   .animate-fade-in {
-    animation: fadeIn 0.8s ease-out;
+    animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .animate-slideIn {
-    animation: slideIn 0.5s ease-out;
+    animation: slideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
   
   .animate-slideUp {
-    animation: slideUp 0.8s ease-out;
+    animation: slideUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
   
   .animate-blob {
@@ -108,10 +121,13 @@
 
 @keyframes float {
   0%, 100% {
-    transform: translateY(0px);
+    transform: translateY(0px) translateX(0px);
   }
-  50% {
-    transform: translateY(-20px);
+  33% {
+    transform: translateY(-10px) translateX(5px);
+  }
+  66% {
+    transform: translateY(-5px) translateX(-5px);
   }
 }
 
@@ -127,11 +143,11 @@
 @keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(20px) scale(0.98);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
@@ -150,34 +166,40 @@
   }
 }
 
-/* STUNNING GRADIENT BACKGROUNDS */
+/* iOS-STYLE PREMIUM GRADIENTS */
 .bg-gradient-radial {
   background: radial-gradient(circle at center, var(--tw-gradient-stops));
 }
 
-.bg-gradient-mesh {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+.bg-gradient-ios {
+  background: linear-gradient(135deg, #007AFF 0%, #5856D6 100%);
 }
 
-.bg-gradient-aurora {
-  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+.bg-gradient-ios-dark {
+  background: linear-gradient(135deg, #1c1c1e 0%, #2c2c2e 100%);
 }
 
-.bg-gradient-cosmic {
-  background: 
-    radial-gradient(circle at 25% 25%, #ff006e 0%, transparent 50%),
-    radial-gradient(circle at 75% 75%, #8338ec 0%, transparent 50%),
-    radial-gradient(circle at 50% 50%, #3a86ff 0%, transparent 50%),
-    linear-gradient(135deg, #ff006e, #8338ec, #3a86ff);
+.bg-gradient-ios-purple {
+  background: linear-gradient(135deg, #5856D6 0%, #AF52DE 100%);
 }
 
-.bg-gradient-rainbow {
-  background: linear-gradient(45deg, 
-    #ff0000, #ff8000, #ffff00, #80ff00, 
-    #00ff00, #00ff80, #00ffff, #0080ff, 
-    #0000ff, #8000ff, #ff00ff, #ff0080);
-  background-size: 400% 400%;
-  animation: rainbow 6s ease-in-out infinite;
+.bg-gradient-ios-blue {
+  background: linear-gradient(135deg, #007AFF 0%, #34C759 100%);
+}
+
+/* iOS-style glassmorphism */
+.glassmorphism {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.glassmorphism-dark {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Responsive utilities */
@@ -198,22 +220,23 @@
   }
 }
 
-/* Focus visible for accessibility (basic) */
+/* iOS-style focus states */
 :focus-visible {
-  outline: 2px solid #3b82f6; /* blue-500 */
-  outline-offset: 2px;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.3);
 }
 
-/* Selection styles */
+/* iOS-style selection */
 ::selection {
-  background-color: #bfdbfe; /* blue-200 */
-  color: #1e3a8a; /* blue-900 */
+  background-color: rgba(0, 122, 255, 0.3);
+  color: #ffffff;
 }
 
 /* High contrast mode support */
 @media (prefers-contrast: high) {
   .gradient-text {
-    @apply text-blue-700 bg-none;
+    color: #1d4ed8;
+    background: none;
   }
 }
 
@@ -321,7 +344,7 @@
 @keyframes slideIn {
   from {
     opacity: 0;
-    transform: translateY(-20px) scale(0.95);
+    transform: translateY(-10px) scale(0.98);
   }
   to {
     opacity: 1;

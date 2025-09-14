@@ -13,6 +13,7 @@ export default function Home() {
   const [showDownloadMenu, setShowDownloadMenu] = useState(false)
   const [hasGeneratedWebsites, setHasGeneratedWebsites] = useState(false)
   const [recentWebsites, setRecentWebsites] = useState<Array<{id: string, name: string, size: string}>>>([])
+  const [activeTab, setActiveTab] = useState('create')
   
   // Check for recent websites on load
   useEffect(() => {
@@ -104,187 +105,275 @@ export default function Home() {
   }
 
   return (
-    <main className="h-screen w-screen overflow-hidden relative">
-      {/* STUNNING COLOR EXPLOSION BACKGROUND */}
-      <div className="absolute inset-0 overflow-hidden">
-        {/* Multiple animated gradient layers */}
-        <div className="absolute inset-0 bg-gradient-to-br from-pink-400 via-purple-500 to-indigo-600 animate-pulse"></div>
-        <div className="absolute inset-0 bg-gradient-to-tl from-yellow-400 via-orange-500 to-red-500 opacity-70 animate-pulse animation-delay-1000"></div>
-        <div className="absolute inset-0 bg-gradient-to-tr from-emerald-400 via-teal-500 to-cyan-600 opacity-60 animate-pulse animation-delay-2000"></div>
+    <main className="h-screen w-screen overflow-hidden relative bg-black">
+      {/* iOS-STYLE PREMIUM GRADIENT BACKGROUND */}
+      <div className="absolute inset-0">
+        {/* Premium gradient mesh like iOS */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 opacity-40"></div>
+        <div className="absolute inset-0 bg-gradient-to-tl from-indigo-600 via-blue-500 to-cyan-500 opacity-30"></div>
         
-        {/* Floating color orbs */}
-        <div className="absolute top-10 left-10 w-32 h-32 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full blur-xl opacity-80 animate-float"></div>
-        <div className="absolute top-20 right-20 w-40 h-40 bg-gradient-to-r from-violet-500 to-purple-600 rounded-full blur-xl opacity-70 animate-float animation-delay-1000"></div>
-        <div className="absolute bottom-20 left-20 w-36 h-36 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full blur-xl opacity-75 animate-float animation-delay-2000"></div>
-        <div className="absolute bottom-10 right-10 w-28 h-28 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full blur-xl opacity-80 animate-float animation-delay-3000"></div>
-        <div className="absolute top-1/2 left-1/2 w-24 h-24 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full blur-xl opacity-70 animate-float animation-delay-1500 transform -translate-x-1/2 -translate-y-1/2"></div>
+        {/* Subtle floating orbs for depth */}
+        <div className="absolute top-20 left-20 w-96 h-96 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 right-20 w-96 h-96 bg-gradient-to-r from-pink-500/20 to-orange-500/20 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-cyan-500/10 to-indigo-500/10 rounded-full blur-3xl"></div>
         
-        {/* Radial color bursts */}
-        <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-radial from-pink-500/30 via-purple-500/20 to-transparent animate-spin-slow"></div>
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-radial from-cyan-500/30 via-blue-500/20 to-transparent animate-spin-slow animation-delay-2000"></div>
+        {/* iOS-style mesh gradient overlay */}
+        <div className="absolute inset-0" style={{
+          backgroundImage: `radial-gradient(at 27% 37%, hsla(215, 98%, 61%, 0.15) 0px, transparent 0%),
+                          radial-gradient(at 97% 21%, hsla(125, 98%, 72%, 0.15) 0px, transparent 50%),
+                          radial-gradient(at 52% 99%, hsla(354, 98%, 61%, 0.15) 0px, transparent 50%),
+                          radial-gradient(at 10% 29%, hsla(256, 96%, 67%, 0.15) 0px, transparent 50%),
+                          radial-gradient(at 97% 96%, hsla(38, 60%, 74%, 0.15) 0px, transparent 50%),
+                          radial-gradient(at 33% 50%, hsla(222, 67%, 73%, 0.15) 0px, transparent 50%),
+                          radial-gradient(at 79% 53%, hsla(343, 68%, 79%, 0.15) 0px, transparent 50%)`
+        }}></div>
         
-        {/* Prismatic overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shimmer"></div>
+        {/* Noise texture for premium feel */}
+        <div className="absolute inset-0 opacity-[0.015]" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`
+        }}></div>
       </div>
 
-      {/* FLOATING HEADER WITH VIBRANT BUTTONS */}
+      {/* iOS-STYLE PREMIUM HEADER */}
       <header className="absolute top-0 left-0 right-0 z-50 p-6">
-        <div className="flex items-center justify-between">
-          {/* STUNNING LOGO */}
-          <div className="flex items-center space-x-4">
-            <div className="relative group">
-              <div className="w-16 h-16 bg-gradient-to-br from-rose-400 via-pink-500 via-purple-500 to-indigo-600 rounded-full flex items-center justify-center shadow-2xl shadow-pink-500/50 transform hover:scale-110 transition-all duration-500 animate-bloom">
-                <span className="text-white font-black text-2xl filter drop-shadow-lg animate-shimmer">🌸</span>
-              </div>
-              <div className="absolute -inset-1 bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 rounded-full blur opacity-75 animate-pulse"></div>
-            </div>
-            
-            <div>
-              <h1 className="text-3xl font-black bg-gradient-to-r from-white via-pink-100 to-purple-100 bg-clip-text text-transparent filter drop-shadow-lg">
-                FlowerCraft AI
-              </h1>
-              <p className="text-white/90 text-sm font-semibold filter drop-shadow-sm">
-                ✨ Powered by Gemini 2.0 Flash ✨
-              </p>
-            </div>
-          </div>
-
-          {/* STUNNING ACTION BUTTONS */}
-          <div className="flex items-center space-x-4">
-            {/* QUICK DEMO - Glowing Button */}
-            <button
-              onClick={handleQuickDemo}
-              className="relative group px-6 py-3 bg-gradient-to-r from-emerald-400 via-teal-500 to-cyan-500 text-white font-bold rounded-full shadow-2xl shadow-emerald-500/50 hover:shadow-emerald-500/70 transform hover:scale-110 transition-all duration-300 animate-glow"
-            >
-              <div className="absolute -inset-1 bg-gradient-to-r from-emerald-400 to-cyan-500 rounded-full blur opacity-60 group-hover:opacity-100 transition-opacity"></div>
-              <div className="relative flex items-center space-x-2">
-                <span className="animate-bounce">🚀</span>
-                <span>Quick Demo</span>
-              </div>
-            </button>
-
-            {/* DOWNLOAD - Spectacular Button */}
-            <div className="relative">
-              <button
-                onClick={handleDownloadLatest}
-                disabled={!hasGeneratedWebsites}
-                className="relative group px-6 py-3 bg-gradient-to-r from-purple-500 via-pink-500 to-rose-500 text-white font-bold rounded-full shadow-2xl shadow-purple-500/50 hover:shadow-purple-500/70 transform hover:scale-110 transition-all duration-300 animate-glow disabled:opacity-50"
-              >
-                <div className="absolute -inset-1 bg-gradient-to-r from-purple-500 to-rose-500 rounded-full blur opacity-60 group-hover:opacity-100 transition-opacity"></div>
-                <div className="relative flex items-center space-x-2">
-                  <span className="animate-bounce animation-delay-500">📥</span>
-                  <span>Download</span>
-                  <span className="animate-bounce animation-delay-1000">⬇️</span>
+        <div className="bg-white/10 backdrop-blur-2xl rounded-2xl border border-white/20 shadow-2xl px-6 py-4">
+          <div className="flex items-center justify-between">
+            {/* PREMIUM LOGO */}
+            <div className="flex items-center space-x-4">
+              <div className="relative">
+                <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-xl transform hover:scale-105 transition-all duration-300">
+                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
                 </div>
-              </button>
+                <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center">
+                  <span className="text-white text-xs font-bold">AI</span>
+                </div>
+              </div>
               
-              {/* Magical Download Dropdown */}
-              {showDownloadMenu && (
-                <div className="absolute right-0 top-full mt-4 w-64 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 py-3 z-50 animate-slideIn">
-                  <div className="px-4 py-2 text-xs font-semibold text-purple-600 border-b border-purple-100">
-                    ✨ Recent Masterpieces
+              <div>
+                <h1 className="text-2xl font-semibold text-white">
+                  FlowerCraft Pro
+                </h1>
+                <p className="text-white/60 text-xs font-medium">
+                  Powered by Gemini 2.0 Flash • Professional Edition
+                </p>
+              </div>
+            </div>
+
+            {/* iOS-STYLE ACTION BUTTONS */}
+            <div className="flex items-center space-x-3">
+              {/* QUICK DEMO - iOS Style */}
+              <button
+                onClick={handleQuickDemo}
+                className="px-5 py-2.5 bg-white/20 backdrop-blur-xl text-white font-medium rounded-xl border border-white/30 hover:bg-white/30 transition-all duration-200 flex items-center space-x-2"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Demo</span>
+              </button>
+
+              {/* DOWNLOAD - iOS Style */}
+              <div className="relative">
+                <button
+                  onClick={handleDownloadLatest}
+                  disabled={!hasGeneratedWebsites}
+                  className="px-5 py-2.5 bg-white/20 backdrop-blur-xl text-white font-medium rounded-xl border border-white/30 hover:bg-white/30 transition-all duration-200 disabled:opacity-50 flex items-center space-x-2"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
+                  </svg>
+                  <span>Download</span>
+                </button>
+              
+                {/* iOS-Style Download Menu */}
+                {showDownloadMenu && (
+                  <div className="absolute right-0 top-full mt-2 w-72 bg-black/80 backdrop-blur-2xl rounded-2xl shadow-2xl border border-white/10 overflow-hidden animate-slideIn">
+                    <div className="px-4 py-3 bg-white/5 border-b border-white/10">
+                      <p className="text-white/60 text-xs font-semibold uppercase tracking-wider">Recent Creations</p>
+                    </div>
+                    <div className="p-2">
+                      {recentWebsites.map((website, index) => (
+                        <button
+                          key={website.id}
+                          onClick={() => downloadWebsite(website.id)}
+                          className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-white/10 flex items-center justify-between transition-all duration-200 group"
+                        >
+                          <div className="flex items-center space-x-3">
+                            <div className="w-10 h-10 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-xl flex items-center justify-center">
+                              <svg className="w-5 h-5 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                              </svg>
+                            </div>
+                            <div>
+                              <p className="text-white/90 text-sm font-medium">{website.name}</p>
+                              <p className="text-white/40 text-xs">{website.size}</p>
+                            </div>
+                          </div>
+                          <svg className="w-4 h-4 text-white/40 group-hover:text-white/60 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                  {recentWebsites.map((website, index) => (
-                    <button
-                      key={website.id}
-                      onClick={() => downloadWebsite(website.id)}
-                      className="w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 flex items-center justify-between transition-all duration-200"
-                      style={{ animationDelay: `${index * 100}ms` }}
-                    >
-                      <span className="font-medium">{website.name}</span>
-                      <span className="text-xs px-2 py-1 bg-gradient-to-r from-purple-100 to-pink-100 text-purple-600 rounded-full">
-                        {website.size}
-                      </span>
-                    </button>
-                  ))}
-                </div>
+                )}
+              </div>
+
+              {/* NEW - iOS Style */}
+              {(isGenerating || generatedWebsite) && (
+                <button
+                  onClick={handleStartOver}
+                  className="px-5 py-2.5 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium rounded-xl hover:opacity-90 transition-all duration-200 shadow-lg flex items-center space-x-2"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
+                  <span>New</span>
+                </button>
               )}
             </div>
-
-            {/* NEW WEBSITE - Magical Button */}
-            {(isGenerating || generatedWebsite) && (
-              <button
-                onClick={handleStartOver}
-                className="relative group px-6 py-3 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white font-bold rounded-full shadow-2xl shadow-indigo-500/50 hover:shadow-indigo-500/70 transform hover:scale-110 transition-all duration-300 animate-glow"
-              >
-                <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-pink-500 rounded-full blur opacity-60 group-hover:opacity-100 transition-opacity"></div>
-                <div className="relative flex items-center space-x-2">
-                  <span className="animate-spin">✨</span>
-                  <span>New Website</span>
-                </div>
-              </button>
-            )}
           </div>
         </div>
       </header>
 
-      {/* SPECTACULAR FULL-SCREEN CONTENT */}
-      <div className="relative z-10 h-full flex items-center justify-center p-8">
+      {/* iOS-STYLE MAIN CONTENT */}
+      <div className="relative z-10 h-full flex items-center justify-center px-6 pt-24 pb-8">
         {!websiteId && !isGenerating && !generatedWebsite && (
-          <div className="w-full max-w-6xl grid lg:grid-cols-2 gap-12 items-center">
-            {/* LEFT SIDE - STUNNING HERO */}
-            <div className="text-center lg:text-left space-y-8">
-              <div className="space-y-6">
-                <div className="inline-flex items-center px-6 py-3 bg-white/20 backdrop-blur-sm text-white text-sm font-bold rounded-full border border-white/30 animate-fadeIn">
-                  🌟 Powered by Gemini 2.0 Flash 🌟
-                </div>
-                
-                <h1 className="text-6xl lg:text-8xl font-black leading-tight">
-                  <span className="bg-gradient-to-r from-white via-pink-100 to-purple-100 bg-clip-text text-transparent filter drop-shadow-2xl animate-textShimmer">
-                    Create
-                  </span>
-                  <br />
-                  <span className="bg-gradient-to-r from-yellow-200 via-orange-200 to-red-200 bg-clip-text text-transparent filter drop-shadow-2xl animate-textShimmer animation-delay-500">
-                    Magical
-                  </span>
-                  <br />
-                  <span className="bg-gradient-to-r from-cyan-200 via-blue-200 to-indigo-200 bg-clip-text text-transparent filter drop-shadow-2xl animate-textShimmer animation-delay-1000">
-                    Websites
-                  </span>
-                </h1>
-                
-                <p className="text-xl lg:text-2xl text-white/90 font-medium leading-relaxed filter drop-shadow-lg">
-                  Experience the magic of AI-powered creativity. 
-                  Professional websites that bloom with beauty and intelligence! 🌺✨
-                </p>
+          <div className="w-full max-w-7xl">
+            {/* iOS-STYLE HERO SECTION */}
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-500/20 to-purple-500/20 backdrop-blur-xl rounded-full border border-white/10 mb-8">
+                <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
+                <span className="text-white/80 text-sm font-medium">Gemini 2.0 Flash Active</span>
+              </div>
+              
+              <h1 className="text-6xl lg:text-7xl font-bold mb-6 tracking-tight">
+                <span className="bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
+                  Create Beautiful
+                </span>
+                <br />
+                <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                  AI Websites
+                </span>
+              </h1>
+              
+              <p className="text-xl text-white/60 font-normal max-w-2xl mx-auto mb-8 leading-relaxed">
+                Professional-grade website generation powered by advanced AI.
+                Beautiful, responsive, and ready in seconds.
+              </p>
 
-                {/* SPECTACULAR FEATURE BADGES */}
-                <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
-                  {[
-                    { text: 'AI Magic', colors: 'from-pink-500 to-rose-500', icon: '🤖' },
-                    { text: 'Lightning Fast', colors: 'from-yellow-500 to-orange-500', icon: '⚡' },
-                    { text: 'Stunning Design', colors: 'from-purple-500 to-indigo-500', icon: '🎨' },
-                    { text: 'Mobile Perfect', colors: 'from-emerald-500 to-teal-500', icon: '📱' },
-                  ].map((badge, index) => (
-                    <div
-                      key={index}
-                      className={`px-4 py-2 bg-gradient-to-r ${badge.colors} text-white rounded-full font-bold text-sm shadow-xl transform hover:scale-110 transition-all duration-300 animate-bounce`}
-                      style={{ animationDelay: `${index * 200}ms` }}
-                    >
-                      <span className="mr-2">{badge.icon}</span>
-                      {badge.text}
-                    </div>
-                  ))}
-                </div>
+              {/* iOS-STYLE FEATURE PILLS */}
+              <div className="flex flex-wrap gap-3 justify-center">
+                {[
+                  { text: 'AI-Powered', icon: '🤖' },
+                  { text: '5-Second Generation', icon: '⚡' },
+                  { text: 'Premium Design', icon: '✨' },
+                  { text: 'Mobile-First', icon: '📱' },
+                ].map((badge, index) => (
+                  <div
+                    key={index}
+                    className="px-4 py-2 bg-white/10 backdrop-blur-xl rounded-full border border-white/20 flex items-center space-x-2 hover:bg-white/15 transition-all duration-200"
+                  >
+                    <span>{badge.icon}</span>
+                    <span className="text-white/80 text-sm font-medium">{badge.text}</span>
+                  </div>
+                ))}
               </div>
             </div>
 
-            {/* RIGHT SIDE - MAGICAL FORM */}
-            <div className="relative">
-              <div className="absolute -inset-4 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 rounded-3xl blur-lg opacity-60 animate-pulse"></div>
-              <div className="relative bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/50 p-8 animate-slideUp">
-                <WebsiteForm onWebsiteGenerated={handleWebsiteGenerated} />
+            {/* iOS-STYLE CARD CONTAINER */}
+            <div className="bg-black/40 backdrop-blur-2xl rounded-3xl border border-white/10 shadow-2xl overflow-hidden">
+              {/* TAB BAR */}
+              <div className="flex border-b border-white/10">
+                <button
+                  onClick={() => setActiveTab('create')}
+                  className={`flex-1 px-6 py-4 text-sm font-medium transition-all duration-200 ${
+                    activeTab === 'create'
+                      ? 'text-white bg-white/10 border-b-2 border-blue-500'
+                      : 'text-white/60 hover:text-white/80'
+                  }`}
+                >
+                  Create
+                </button>
+                <button
+                  onClick={() => setActiveTab('templates')}
+                  className={`flex-1 px-6 py-4 text-sm font-medium transition-all duration-200 ${
+                    activeTab === 'templates'
+                      ? 'text-white bg-white/10 border-b-2 border-blue-500'
+                      : 'text-white/60 hover:text-white/80'
+                  }`}
+                >
+                  Templates
+                </button>
+                <button
+                  onClick={() => setActiveTab('history')}
+                  className={`flex-1 px-6 py-4 text-sm font-medium transition-all duration-200 ${
+                    activeTab === 'history'
+                      ? 'text-white bg-white/10 border-b-2 border-blue-500'
+                      : 'text-white/60 hover:text-white/80'
+                  }`}
+                >
+                  History
+                </button>
+              </div>
+
+              {/* TAB CONTENT */}
+              <div className="p-8">
+                {activeTab === 'create' && (
+                  <WebsiteForm onWebsiteGenerated={handleWebsiteGenerated} />
+                )}
+                {activeTab === 'templates' && (
+                  <div className="text-center py-12">
+                    <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                      <svg className="w-8 h-8 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+                      </svg>
+                    </div>
+                    <h3 className="text-white/80 text-lg font-semibold mb-2">Premium Templates</h3>
+                    <p className="text-white/40 text-sm">Coming soon with 50+ professional templates</p>
+                  </div>
+                )}
+                {activeTab === 'history' && (
+                  <div className="space-y-3">
+                    {recentWebsites.map((website, index) => (
+                      <div
+                        key={website.id}
+                        className="p-4 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 hover:bg-white/10 transition-all duration-200 cursor-pointer group"
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-4">
+                            <div className="w-12 h-12 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-xl flex items-center justify-center">
+                              <span className="text-lg">🌐</span>
+                            </div>
+                            <div>
+                              <p className="text-white/90 font-medium">{website.name}</p>
+                              <p className="text-white/40 text-sm">Created 2 hours ago • {website.size}</p>
+                            </div>
+                          </div>
+                          <button
+                            onClick={() => downloadWebsite(website.id)}
+                            className="px-4 py-2 bg-white/10 rounded-xl text-white/80 text-sm font-medium opacity-0 group-hover:opacity-100 transition-all duration-200 hover:bg-white/20"
+                          >
+                            Download
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>
         )}
 
-        {/* GENERATION STATUS - FULL SCREEN SPECTACLE */}
+        {/* iOS-STYLE GENERATION STATUS */}
         {isGenerating && websiteId && (
-          <div className="w-full h-full flex items-center justify-center">
-            <div className="relative max-w-2xl w-full">
-              <div className="absolute -inset-8 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 rounded-3xl blur-xl opacity-60 animate-pulse"></div>
-              <div className="relative bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/50 p-12">
+          <div className="w-full h-full flex items-center justify-center px-6">
+            <div className="max-w-xl w-full">
+              <div className="bg-black/40 backdrop-blur-2xl rounded-3xl border border-white/10 shadow-2xl p-8">
                 <GenerationStatus 
                   websiteId={websiteId} 
                   onComplete={handleGenerationComplete}
@@ -294,12 +383,11 @@ export default function Home() {
           </div>
         )}
 
-        {/* PREVIEW - SPECTACULAR FULL SCREEN */}
+        {/* iOS-STYLE PREVIEW */}
         {generatedWebsite && (
-          <div className="w-full h-full flex items-center justify-center">
-            <div className="relative max-w-6xl w-full">
-              <div className="absolute -inset-8 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 rounded-3xl blur-xl opacity-60 animate-pulse"></div>
-              <div className="relative bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/50 p-8">
+          <div className="w-full h-full flex items-center justify-center px-6">
+            <div className="max-w-6xl w-full">
+              <div className="bg-black/40 backdrop-blur-2xl rounded-3xl border border-white/10 shadow-2xl p-6">
                 <WebsitePreview 
                   website={generatedWebsite}
                   onStartOver={handleStartOver}
@@ -310,23 +398,38 @@ export default function Home() {
         )}
       </div>
 
-      {/* FLOATING STATS - NO FOOTER NEEDED */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20">
-        <div className="flex space-x-6">
-          {[
-            { number: '15+', label: 'Website Types', color: 'from-pink-500 to-rose-500' },
-            { number: '10K+', label: 'AI Characters', color: 'from-purple-500 to-indigo-500' },
-            { number: '<30s', label: 'Generation', color: 'from-cyan-500 to-blue-500' },
-          ].map((stat, index) => (
-            <div
-              key={index}
-              className={`px-4 py-3 bg-gradient-to-r ${stat.color} text-white rounded-2xl shadow-xl backdrop-blur-sm border border-white/20 text-center animate-bounce`}
-              style={{ animationDelay: `${index * 300}ms` }}
-            >
-              <div className="text-lg font-black">{stat.number}</div>
-              <div className="text-xs font-medium opacity-90">{stat.label}</div>
+      {/* iOS-STYLE BOTTOM BAR */}
+      <div className="absolute bottom-0 left-0 right-0 z-20 p-6">
+        <div className="bg-white/10 backdrop-blur-2xl rounded-2xl border border-white/20 px-6 py-4">
+          <div className="flex justify-between items-center">
+            <div className="flex space-x-8">
+              {[
+                { number: '15+', label: 'Templates' },
+                { number: '10K+', label: 'Generated' },
+                { number: '5s', label: 'Average Time' },
+              ].map((stat, index) => (
+                <div key={index} className="text-center">
+                  <div className="text-2xl font-semibold text-white">{stat.number}</div>
+                  <div className="text-xs text-white/60">{stat.label}</div>
+                </div>
+              ))}
             </div>
-          ))}
+            <div className="flex items-center space-x-3">
+              <div className="flex -space-x-2">
+                {[1, 2, 3, 4].map((i) => (
+                  <div
+                    key={i}
+                    className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-600 border-2 border-black/20"
+                    style={{ zIndex: 5 - i }}
+                  />
+                ))}
+              </div>
+              <div className="text-sm text-white/80">
+                <span className="font-semibold">1,247</span>
+                <span className="text-white/60"> users online</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </main>
