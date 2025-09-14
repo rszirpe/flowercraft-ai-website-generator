@@ -14,8 +14,8 @@ from datetime import datetime
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Configure Gemini
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AIzaSyCtrme34gihpa0Q7c-QbVlmElIkaGDvf9A")  # Use env var or fallback
+# Configure Gemini with user's API key
+GEMINI_API_KEY = "AIzaSyCtrme34gihpa0Q7c-QbVlmElIkaGDvf9A"  # User's provided API key
 genai.configure(api_key=GEMINI_API_KEY)
 
 app = FastAPI(title="AI Website Generator", description="Generate websites using AI")
@@ -44,7 +44,7 @@ class WebsiteRequest(BaseModel):
     target_audience: str
     color_scheme: Optional[str] = None
     features: List[str] = Field(default_factory=list)
-    pages: List[str] = Field(default_factory=list)
+    pages: List[str] = Field(default_factory=lambda: ["Home", "About", "Contact"])
 
 class WebsiteResponse(BaseModel):
     id: str
@@ -57,393 +57,715 @@ class WebsiteResponse(BaseModel):
     preview_url: Optional[str] = None
     error_details: Optional[str] = None
 
-# In-memory storage (use database in production)
-website_storage: Dict[str, WebsiteResponse] = {}
+# In-memory storage for generated websites
+generated_websites: Dict[str, Dict] = {}
 
 def get_gemini_model():
-    """Get configured Gemini model"""
-    try:
-        return genai.GenerativeModel('gemini-1.5-flash')
-    except Exception as e:
-        logger.error(f"Failed to initialize Gemini model: {e}")
-        raise HTTPException(status_code=500, detail="AI service unavailable")
+    """Get Gemini model if configured, otherwise raise to trigger fallback"""
+    if not GEMINI_API_KEY:
+        raise RuntimeError("GEMINI_API_KEY not set")
+    return genai.GenerativeModel('gemini-2.0-flash-exp')
 
-def generate_website_content(request: WebsiteRequest) -> dict:
+async def generate_website_content(request: WebsiteRequest) -> Dict:
     """Generate website content using Gemini AI"""
+    
+    logger.info(f"🧠 Starting Gemini AI content generation...")
+    logger.info(f"📋 Business: {request.business_name}, Type: {request.website_type}")
+    
     try:
-        logger.info("✨ Generating website content with Gemini AI...")
-        logger.info("🧠 Starting Gemini AI content generation...")
-        logger.info(f"📋 Business: {request.business_name}, Type: {request.website_type}")
-        
         model = get_gemini_model()
-        logger.info("✅ Gemini model loaded successfully")
+        logger.info(f"✅ Gemini model loaded successfully")
         
-        # Enhanced prompt for better JSON output
-        prompt = f"""
-You are an expert web developer. Create a complete, responsive website for the following business:
+        # Enhanced prompt for much more thoughtful generation
+        prompt = f"""You are a world-class creative web designer and developer with 15+ years of experience creating award-winning websites. 
 
-Business Name: {request.business_name}
-Website Type: {request.website_type}
-Description: {request.description}
-Target Audience: {request.target_audience}
-Color Scheme: {request.color_scheme or "Modern and professional"}
-Features: {', '.join(request.features) if request.features else 'Standard business features'}
-Pages: {', '.join(request.pages) if request.pages else 'Home, About, Contact'}
+TAKE YOUR TIME AND PUT SERIOUS THOUGHT INTO THIS. This isn't just a template - create something truly exceptional and unique.
 
-IMPORTANT: You must respond with ONLY a valid JSON object in this exact format:
+🎯 BUSINESS ANALYSIS:
+- Business Name: {request.business_name}
+- Industry: {request.website_type}
+- Brand Story: {request.description}
+- Target Audience: {request.target_audience}
+- Visual Identity: {request.color_scheme or 'Choose colors that match the brand personality'}
+- Required Features: {', '.join(request.features) if request.features else 'Essential business features'}
+- Site Structure: {', '.join(request.pages)}
+
+🎨 CREATIVE DIRECTION:
+Think deeply about this brand's personality, values, and what would resonate with their target audience. Consider:
+- What emotions should this website evoke?
+- How can the visual design reflect the brand's unique value proposition?
+- What storytelling elements would engage their specific audience?
+- How can we create a memorable, distinctive user experience?
+
+💻 TECHNICAL EXCELLENCE:
+Create a sophisticated, modern website featuring:
+- Cutting-edge HTML5 with perfect semantic structure
+- Beautiful CSS3 with smooth animations and micro-interactions
+- Sophisticated JavaScript with modern ES6+ features
+- Advanced responsive design with fluid layouts
+- Professional typography and spacing
+- Accessibility best practices (ARIA labels, focus management)
+- Performance optimizations
+- SEO excellence with proper meta tags and structure
+
+🌟 DESIGN PHILOSOPHY:
+- Every element should have purpose and meaning
+- Colors should tell a story and evoke the right emotions
+- Animations should feel natural and enhance the experience
+- The layout should guide users through a compelling journey
+- Make it feel premium, polished, and professional
+
+⚡ INTERACTIVE ELEMENTS:
+Add thoughtful interactions like:
+- Smooth hover effects that provide visual feedback
+- Progressive disclosure of information
+- Subtle animations that guide attention
+- Form validation with helpful messaging
+- Loading states and feedback
+
+🎯 BRAND-SPECIFIC CUSTOMIZATION:
+Tailor every aspect to this specific business:
+- Industry-appropriate imagery and icons
+- Tone of voice that matches the brand
+- Layout that supports their business goals
+- Call-to-actions that convert visitors
+- Content hierarchy that tells their story
+
+RESPOND ONLY with this EXACT JSON format (no markdown, no explanations):
 
 {{
-  "html": "complete HTML code here",
-  "css": "complete CSS code here", 
-  "js": "complete JavaScript code here"
+  "html": "your thoughtfully crafted HTML code with semantic structure, proper meta tags, and industry-specific content",
+  "css": "your beautiful CSS with advanced styling, animations, responsive design, and brand-appropriate aesthetics", 
+  "js": "your sophisticated JavaScript with modern features, interactions, and enhanced user experience",
+  "description": "a compelling description of the unique website you created and why it's perfect for this business"
 }}
 
-Requirements:
-1. Create professional, modern, and responsive design
-2. Include semantic HTML5 structure
-3. Use CSS with media queries for mobile responsiveness
-4. Add relevant JavaScript for interactivity
-5. Include the specified features and pages
-6. Make it industry-appropriate for {request.website_type}
-7. Use the specified color scheme: {request.color_scheme or "professional colors"}
-8. Ensure the content is relevant to: {request.description}
-9. Target the content for: {request.target_audience}
-
-Respond with ONLY the JSON object, no other text or formatting.
-"""
+Remember: This is for {request.business_name} in the {request.website_type} industry. Make it extraordinary."""
         
-        logger.info("📤 Sending request to Gemini AI...")
+        logger.info(f"📤 Sending request to Gemini AI...")
         response = model.generate_content(prompt)
-        logger.info("📥 Received response from Gemini AI")
-        logger.info(f"📝 Response length: {len(response.text)} characters")
+        logger.info(f"📥 Received response from Gemini AI")
         
+        # Enhanced JSON extraction for Gemini 2.0 Flash
         response_text = response.text.strip()
-        logger.info(f"📋 Response preview: {response_text[:200]}...")
+        logger.info(f"📝 Response length: {len(response_text)} characters")
         
-        # Enhanced JSON parsing with multiple fallback methods
-        parsed_content = None
+        # Clean the response for better parsing
+        # Remove any control characters that might cause issues
+        import re
+        cleaned_text = re.sub(r'[\x00-\x1f\x7f-\x9f]', '', response_text)
         
-        # Method 1: Direct JSON parsing
+        # First, log a preview of the response to debug
+        preview = cleaned_text[:500] + "..." if len(cleaned_text) > 500 else cleaned_text
+        logger.info(f"📋 Response preview: {preview}")
+        
+        # Try multiple JSON extraction methods
+        json_result = None
+        
+        # Method 1: Direct JSON parsing with cleaned text
         try:
-            parsed_content = json.loads(response_text)
-            logger.info("✅ Method 1: Direct JSON parsing successful")
-        except json.JSONDecodeError as e:
-            logger.info("⚠️ Method 1: Direct JSON parsing failed")
+            json_result = json.loads(cleaned_text)
+            logger.info(f"✅ Method 1: Direct JSON parsing successful")
+        except json.JSONDecodeError:
+            logger.info(f"⚠️ Method 1: Direct JSON parsing failed")
             
-            # Method 2: Remove markdown code blocks and try again
+            # Method 2: Remove markdown code blocks if present
             try:
                 # Remove ```json and ``` markers
-                cleaned_text = response_text
-                if "```json" in cleaned_text:
-                    cleaned_text = cleaned_text.split("```json")[1].split("```")[0]
-                elif "```" in cleaned_text:
-                    cleaned_text = cleaned_text.split("```")[1].split("```")[0]
+                clean_text = cleaned_text
+                if "```json" in clean_text:
+                    clean_text = clean_text.split("```json")[1].split("```")[0].strip()
+                elif "```" in clean_text:
+                    clean_text = clean_text.split("```")[1].split("```")[0].strip()
                 
-                parsed_content = json.loads(cleaned_text.strip())
-                logger.info("✅ Method 2: Cleaned JSON parsing successful")
-            except (json.JSONDecodeError, IndexError) as e:
-                logger.info("⚠️ Method 2: Cleaned JSON parsing failed")
+                json_result = json.loads(clean_text)
+                logger.info(f"✅ Method 2: Cleaned JSON parsing successful")
+            except (json.JSONDecodeError, IndexError):
+                logger.info(f"⚠️ Method 2: Cleaned JSON parsing failed")
                 
-                # Method 3: Find JSON boundaries
+                # Method 3: Find JSON boundaries with cleaned text
                 try:
-                    start_idx = response_text.find('{')
-                    end_idx = response_text.rfind('}') + 1
+                    start_idx = cleaned_text.find('{')
+                    end_idx = cleaned_text.rfind('}') + 1
+                    
                     if start_idx != -1 and end_idx > start_idx:
-                        json_text = response_text[start_idx:end_idx]
-                        parsed_content = json.loads(json_text)
-                        logger.info("✅ Method 3: Boundary JSON parsing successful")
+                        json_str = cleaned_text[start_idx:end_idx]
+                        json_result = json.loads(json_str)
+                        logger.info(f"✅ Method 3: Boundary JSON parsing successful")
                     else:
-                        raise ValueError("No JSON boundaries found")
-                except (json.JSONDecodeError, ValueError) as e:
+                        logger.warning(f"⚠️ Method 3: No JSON boundaries found")
+                except json.JSONDecodeError as e:
                     logger.warning(f"⚠️ Method 3: Boundary JSON parsing failed: {e}")
         
-        # Check if we have valid content
-        if parsed_content and all(key in parsed_content for key in ['html', 'css', 'js']):
-            logger.info("🎉 Successfully parsed Gemini JSON response with all required keys")
-            return parsed_content
-        else:
-            logger.warning("⚠️ JSON parsing failed: Invalid or incomplete response, using fallback")
-            raise ValueError("Failed to parse AI response")
-            
-    except Exception as e:
-        logger.error(f"Gemini API error: {e}")
-        logger.info("🔄 Using fallback website generation...")
+        if json_result and isinstance(json_result, dict):
+            # Validate required keys
+            if 'html' in json_result and 'css' in json_result and 'js' in json_result:
+                logger.info(f"🎉 Successfully parsed Gemini JSON response with all required keys")
+                return json_result
+            else:
+                logger.warning(f"⚠️ JSON missing required keys. Has: {list(json_result.keys())}")
         
-        # Fallback content generation
+        logger.warning(f"⚠️ All JSON parsing methods failed, using fallback")
+        
+        # If JSON parsing fails, create a structured response
+        logger.info(f"🔄 Using fallback website generation...")
         return {
-            "html": f"""<!DOCTYPE html>
+            "html": create_fallback_html(request),
+            "css": create_fallback_css(request),
+            "js": create_fallback_js(),
+            "description": f"Professional {request.website_type} website for {request.business_name}"
+        }
+        
+    except Exception as e:
+        logger.error(f"❌ Gemini API error: {e}")
+        logger.info(f"🔄 Using fallback website generation due to API error...")
+        return {
+            "html": create_fallback_html(request),
+            "css": create_fallback_css(request),
+            "js": create_fallback_js(),
+            "description": f"Professional {request.website_type} website for {request.business_name}"
+        }
+
+def create_fallback_html(request: WebsiteRequest) -> str:
+    """Create fallback HTML when Gemini API fails"""
+    pages_nav = '\n'.join([f'<li><a href="#{page.lower()}">{page}</a></li>' for page in request.pages])
+    
+    return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{request.business_name}</title>
+    <title>{request.business_name} - {request.website_type}</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
         <nav>
-            <a href="#" class="logo">{request.business_name}</a>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="contact.html">Contact</a></li>
+            <div class="nav-brand">
+                <h1>{request.business_name}</h1>
+            </div>
+            <ul class="nav-menu">
+                {pages_nav}
             </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </nav>
-        <div class="hero">
-            <h1>{request.business_name}</h1>
-            <p>{request.description[:100]}...</p>
-            <button>Learn More</button>
-        </div>
     </header>
 
     <main>
-        <!-- Content will vary based on page -->
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <h1>Welcome to {request.business_name}</h1>
+                <p>{request.description}</p>
+                <button class="cta-button">Get Started</button>
+            </div>
+        </section>
+
+        <section id="about" class="about">
+            <div class="container">
+                <h2>About Us</h2>
+                <p>We specialize in providing excellent {request.website_type.lower()} services to our {request.target_audience.lower()}. Our mission is to deliver quality and satisfaction in everything we do.</p>
+            </div>
+        </section>
+
+        <section id="contact" class="contact">
+            <div class="container">
+                <h2>Contact Us</h2>
+                <form class="contact-form">
+                    <input type="text" placeholder="Your Name" required>
+                    <input type="email" placeholder="Your Email" required>
+                    <textarea placeholder="Your Message" required></textarea>
+                    <button type="submit">Send Message</button>
+                </form>
+            </div>
+        </section>
     </main>
 
     <footer>
-        <p>&copy; 2023 {request.business_name}</p>
+        <div class="container">
+            <p>&copy; 2024 {request.business_name}. All rights reserved.</p>
+        </div>
     </footer>
+
     <script src="script.js"></script>
 </body>
-</html>""",
-            "css": """/* General Styles */
-body {
-    font-family: sans-serif;
+</html>"""
+
+def create_fallback_css(request: WebsiteRequest) -> str:
+    """Create fallback CSS when Gemini API fails"""
+    primary_color = "#3b82f6" if not request.color_scheme else "#2563eb"
+    
+    return f"""* {{
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    box-sizing: border-box;
+}}
+
+body {{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
     color: #333;
-}
+}}
 
-header {
-    background-color: #007bff;
-    color: white;
-    padding: 20px 0;
-}
+.container {{
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}}
 
-nav {
+/* Header */
+header {{
+    background: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}}
+
+nav {{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 20px;
-}
+    padding: 1rem 2rem;
+}}
 
-.logo {
-    font-size: 24px;
-    font-weight: bold;
-    text-decoration: none;
-    color: white;
-}
+.nav-brand h1 {{
+    color: {primary_color};
+    font-size: 1.5rem;
+}}
 
-nav ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+.nav-menu {{
     display: flex;
-}
+    list-style: none;
+    gap: 2rem;
+}}
 
-nav li {
-    margin-left: 20px;
-}
-
-nav a {
+.nav-menu a {{
     text-decoration: none;
-    color: white;
-}
+    color: #333;
+    font-weight: 500;
+    transition: color 0.3s;
+}}
 
-.hero {
-    text-align: center;
-    padding: 100px 0;
-}
+.nav-menu a:hover {{
+    color: {primary_color};
+}}
 
-.hero h1 {
-    font-size: 48px;
-    margin-bottom: 20px;
-}
-
-.hero p {
-    font-size: 24px;
-    margin-bottom: 30px;
-}
-
-.hero button {
-    padding: 15px 30px;
-    background-color: #0056b3;
-    color: white;
-    border: none;
-    border-radius: 5px;
+.hamburger {{
+    display: none;
+    flex-direction: column;
     cursor: pointer;
-}
+}}
 
-/* Responsive Styles */
-@media (max-width: 768px) {
-    nav ul {
+.hamburger span {{
+    width: 25px;
+    height: 3px;
+    background: #333;
+    margin: 3px 0;
+    transition: 0.3s;
+}}
+
+/* Hero Section */
+.hero {{
+    background: linear-gradient(135deg, {primary_color}, #1e40af);
+    color: white;
+    padding: 8rem 2rem 4rem;
+    text-align: center;
+    margin-top: 80px;
+}}
+
+.hero-content h1 {{
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    animation: fadeInUp 1s ease;
+}}
+
+.hero-content p {{
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    animation: fadeInUp 1s ease 0.2s both;
+}}
+
+.cta-button {{
+    background: white;
+    color: {primary_color};
+    padding: 12px 30px;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    animation: fadeInUp 1s ease 0.4s both;
+}}
+
+.cta-button:hover {{
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}}
+
+/* Sections */
+section {{
+    padding: 4rem 0;
+}}
+
+.about {{
+    background: #f8fafc;
+}}
+
+.about h2, .contact h2 {{
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+    color: #333;
+}}
+
+.about p {{
+    text-align: center;
+    font-size: 1.1rem;
+    max-width: 800px;
+    margin: 0 auto;
+}}
+
+/* Contact Form */
+.contact-form {{
+    max-width: 600px;
+    margin: 0 auto;
+}}
+
+.contact-form input,
+.contact-form textarea {{
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}}
+
+.contact-form input:focus,
+.contact-form textarea:focus {{
+    outline: none;
+    border-color: {primary_color};
+}}
+
+.contact-form textarea {{
+    height: 120px;
+    resize: vertical;
+}}
+
+.contact-form button {{
+    background: {primary_color};
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+    width: 100%;
+}}
+
+.contact-form button:hover {{
+    background: #1e40af;
+}}
+
+/* Footer */
+footer {{
+    background: #1a202c;
+    color: white;
+    text-align: center;
+    padding: 2rem 0;
+}}
+
+/* Animations */
+@keyframes fadeInUp {{
+    from {{
+        opacity: 0;
+        transform: translateY(30px);
+    }}
+    to {{
+        opacity: 1;
+        transform: translateY(0);
+    }}
+}}
+
+/* Responsive Design */
+@media (max-width: 768px) {{
+    .nav-menu {{
+        position: fixed;
+        left: -100%;
+        top: 70px;
         flex-direction: column;
-        align-items: center;
-    }
-    nav li {
-        margin: 10px 0;
-    }
-}""",
-            "js": "// Placeholder JavaScript\nconsole.log(\"JavaScript loaded\");"
-        }
+        background-color: white;
+        width: 100%;
+        text-align: center;
+        transition: 0.3s;
+        box-shadow: 0 10px 27px rgba(0,0,0,0.05);
+        padding: 2rem 0;
+    }}
 
-async def generate_website_background(request: WebsiteRequest, website_id: str):
-    """Background task to generate website"""
+    .nav-menu.active {{
+        left: 0;
+    }}
+
+    .hamburger {{
+        display: flex;
+    }}
+
+    .hamburger.active span:nth-child(2) {{
+        opacity: 0;
+    }}
+
+    .hamburger.active span:nth-child(1) {{
+        transform: translateY(8px) rotate(45deg);
+    }}
+
+    .hamburger.active span:nth-child(3) {{
+        transform: translateY(-8px) rotate(-45deg);
+    }}
+
+    .hero-content h1 {{
+        font-size: 2rem;
+    }}
+
+    .hero {{
+        padding: 6rem 1rem 3rem;
+    }}
+}}"""
+
+def create_fallback_js() -> str:
+    """Create fallback JavaScript when Gemini API fails"""
+    return """// Mobile Navigation
+const hamburger = document.querySelector('.hamburger');
+const navMenu = document.querySelector('.nav-menu');
+
+hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('active');
+    navMenu.classList.toggle('active');
+});
+
+// Close mobile menu when clicking on a link
+document.querySelectorAll('.nav-menu a').forEach(n => n.addEventListener('click', () => {
+    hamburger.classList.remove('active');
+    navMenu.classList.remove('active');
+}));
+
+// Smooth scrolling for navigation links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    });
+});
+
+// Contact form handling
+const contactForm = document.querySelector('.contact-form');
+contactForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Get form data
+    const formData = new FormData(this);
+    const name = this.querySelector('input[type="text"]').value;
+    const email = this.querySelector('input[type="email"]').value;
+    const message = this.querySelector('textarea').value;
+    
+    // Simple validation
+    if (name && email && message) {
+        alert('Thank you for your message! We will get back to you soon.');
+        this.reset();
+    } else {
+        alert('Please fill in all fields.');
+    }
+});
+
+// Add scroll effect to header
+window.addEventListener('scroll', () => {
+    const header = document.querySelector('header');
+    if (window.scrollY > 100) {
+        header.style.background = 'rgba(255, 255, 255, 0.95)';
+        header.style.backdropFilter = 'blur(10px)';
+    } else {
+        header.style.background = 'white';
+        header.style.backdropFilter = 'none';
+    }
+});
+
+// Add loading animation
+window.addEventListener('load', () => {
+    document.body.classList.add('loaded');
+});"""
+
+@app.post("/generate-website", response_model=WebsiteResponse)
+async def generate_website(request: WebsiteRequest, background_tasks: BackgroundTasks):
+    """Generate a website based on user requirements"""
+    
+    website_id = str(uuid.uuid4())
+    
+    # Store initial status
+    generated_websites[website_id] = {
+        "id": website_id,
+        "status": "generating",
+        "message": "Generating your website...",
+        "request": request.model_dump(),
+        "created_at": datetime.now()
+    }
+    
+    # Start background generation
+    background_tasks.add_task(generate_website_background, website_id, request)
+    
+    return WebsiteResponse(
+        id=website_id,
+        status="generating",
+        message="Website generation started. Please check status for updates."
+    )
+
+async def generate_website_background(website_id: str, request: WebsiteRequest):
+    """Background task to generate website content with progress tracking"""
     try:
+        # Step 1: Initialize
         logger.info(f"🚀 Starting website generation for {website_id}")
-        website_storage[website_id].message = "🤖 Testing Gemini API connection..."
-        website_storage[website_id].progress = 10
+        generated_websites[website_id].update({
+            "message": "🔍 Analyzing your requirements...",
+            "progress": 10
+        })
         
-        # Test Gemini connection
-        try:
-            model = get_gemini_model()
-            test_response = model.generate_content("Say 'Hello' in a professional tone.")
-        except Exception as e:
-            logger.error(f"Gemini connection test failed: {e}")
-            website_storage[website_id].status = "failed"
-            website_storage[website_id].message = f"AI service connection failed: {str(e)}"
-            return
+        # Step 2: Test Gemini API connection
+        logger.info(f"🤖 Testing Gemini API connection...")
+        generated_websites[website_id].update({
+            "message": "🤖 Connecting to Gemini AI...",
+            "progress": 20
+        })
         
-        website_storage[website_id].message = "✨ Generating website content with Gemini AI..."
-        website_storage[website_id].progress = 20
+        # Step 3: Generate content using Gemini
+        logger.info(f"✨ Generating website content with Gemini AI...")
+        generated_websites[website_id].update({
+            "message": "✨ AI is creating your website content...",
+            "progress": 40
+        })
         
-        # Generate content
-        content = generate_website_content(request)
-        website_storage[website_id].progress = 40
-        
-        # Update with generated content
-        website_storage[website_id].html_content = content["html"]
-        website_storage[website_id].css_content = content["css"]
-        website_storage[website_id].js_content = content["js"]
-        website_storage[website_id].message = "🎨 Styling and optimizing..."
-        website_storage[website_id].progress = 70
-        
-        # Create directory and save files
-        website_storage[website_id].message = "💾 Saving website files..."
-        website_storage[website_id].progress = 85
-        
-        # Create directory
-        websites_dir = "generated_websites"
-        website_dir = os.path.join(websites_dir, website_id)
-        os.makedirs(website_dir, exist_ok=True)
-        logger.info(f"📁 Created directory: {website_dir}")
-        
-        # Save files
-        async with aiofiles.open(os.path.join(website_dir, "index.html"), "w") as f:
-            await f.write(content["html"])
-        logger.info("✅ Saved HTML file")
-        
-        async with aiofiles.open(os.path.join(website_dir, "style.css"), "w") as f:
-            await f.write(content["css"])
-        logger.info("✅ Saved CSS file")
-        
-        async with aiofiles.open(os.path.join(website_dir, "script.js"), "w") as f:
-            await f.write(content["js"])
-        logger.info("✅ Saved JS file")
-        
-        # Mark as completed
-        website_storage[website_id].status = "completed"
-        website_storage[website_id].message = "🎉 Website generated successfully!"
-        website_storage[website_id].progress = 100
-        website_storage[website_id].preview_url = f"/preview/{website_id}"
+        content = await generate_website_content(request)
         
         logger.info(f"📝 Content generated successfully for {website_id}")
+        generated_websites[website_id].update({
+            "message": "📝 Content generated! Creating files...",
+            "progress": 70
+        })
+        
+        # Step 4: Create output directory
+        output_dir = f"generated_websites/{website_id}"
+        os.makedirs(output_dir, exist_ok=True)
+        logger.info(f"📁 Created directory: {output_dir}")
+        
+        # Step 5: Save files
+        generated_websites[website_id].update({
+            "message": "💾 Saving website files...",
+            "progress": 85
+        })
+        
+        async with aiofiles.open(f"{output_dir}/index.html", 'w') as f:
+            await f.write(content['html'])
+        logger.info(f"✅ Saved HTML file")
+        
+        async with aiofiles.open(f"{output_dir}/style.css", 'w') as f:
+            await f.write(content['css'])
+        logger.info(f"✅ Saved CSS file")
+        
+        async with aiofiles.open(f"{output_dir}/script.js", 'w') as f:
+            await f.write(content['js'])
+        logger.info(f"✅ Saved JS file")
+        
+        # Step 6: Final update
+        generated_websites[website_id].update({
+            "status": "completed",
+            "message": "🎉 Website generated successfully!",
+            "progress": 100,
+            "html_content": content['html'],
+            "css_content": content['css'],
+            "js_content": content['js'],
+            "preview_url": f"/preview/{website_id}",
+            "description": content.get('description', 'Website generated successfully')
+        })
+        
         logger.info(f"🎉 Website generation completed successfully for {website_id}")
         
     except Exception as e:
-        logger.error(f"Error in background generation: {e}")
-        website_storage[website_id].status = "failed"
-        website_storage[website_id].message = f"Generation failed: {str(e)}"
-        website_storage[website_id].error_details = str(e)
+        error_msg = f"Failed to generate website: {str(e)}"
+        logger.error(f"❌ Error generating website {website_id}: {e}")
+        generated_websites[website_id].update({
+            "status": "failed",
+            "message": f"❌ {error_msg}",
+            "progress": 0,
+            "error_details": str(e)
+        })
 
-@app.post("/generate-website")
-async def generate_website(request: WebsiteRequest, background_tasks: BackgroundTasks):
-    """Start website generation"""
-    website_id = str(uuid.uuid4())
-    
-    # Initialize website record
-    website_storage[website_id] = WebsiteResponse(
-        id=website_id,
-        status="generating",
-        message="Website generation started. Please check status for updates.",
-        progress=0
-    )
-    
-    # Start background generation
-    background_tasks.add_task(generate_website_background, request, website_id)
-    
-    return website_storage[website_id]
-
-@app.get("/status/{website_id}")
+@app.get("/status/{website_id}", response_model=WebsiteResponse)
 async def get_website_status(website_id: str):
-    """Get website generation status"""
-    if website_id not in website_storage:
+    """Get the status of a website generation"""
+    if website_id not in generated_websites:
         raise HTTPException(status_code=404, detail="Website not found")
     
-    return website_storage[website_id]
+    website_data = generated_websites[website_id]
+    return WebsiteResponse(**website_data)
 
 @app.get("/preview/{website_id}")
 async def preview_website(website_id: str):
-    """Preview generated website"""
-    if website_id not in website_storage:
+    """Preview a generated website"""
+    if website_id not in generated_websites:
         raise HTTPException(status_code=404, detail="Website not found")
     
-    website_data = website_storage[website_id]
+    website_data = generated_websites[website_id]
     
-    if website_data.status != "completed" or not website_data.html_content:
-        raise HTTPException(status_code=404, detail="Website not ready")
+    if website_data["status"] != "completed":
+        raise HTTPException(status_code=400, detail="Website not ready for preview")
     
-    from fastapi.responses import HTMLResponse
-    return HTMLResponse(content=website_data.html_content)
+    html_content = website_data.get("html_content", "")
+    
+    # Inject CSS and JS inline for preview
+    css_content = website_data.get("css_content", "")
+    js_content = website_data.get("js_content", "")
+    
+    # Insert CSS and JS into HTML
+    if css_content:
+        html_content = html_content.replace(
+            '<link rel="stylesheet" href="style.css">',
+            f'<style>{css_content}</style>'
+        )
+    
+    if js_content:
+        html_content = html_content.replace(
+            '<script src="script.js"></script>',
+            f'<script>{js_content}</script>'
+        )
+    
+    return {"html": html_content}
 
 @app.get("/download/{website_id}")
 async def download_website(website_id: str):
-    """Download website as ZIP file"""
-    if website_id not in website_storage:
+    """Download generated website files"""
+    if website_id not in generated_websites:
         raise HTTPException(status_code=404, detail="Website not found")
     
-    website_data = website_storage[website_id]
+    website_data = generated_websites[website_id]
     
-    if website_data.status != "completed":
-        raise HTTPException(status_code=404, detail="Website not ready")
-    
-    import io
-    import zipfile
-    from fastapi.responses import StreamingResponse
-    
-    # Create ZIP file in memory
-    zip_buffer = io.BytesIO()
-    
-    with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
-        zip_file.writestr("index.html", website_data.html_content or "")
-        zip_file.writestr("style.css", website_data.css_content or "")
-        zip_file.writestr("script.js", website_data.js_content or "")
-    
-    zip_buffer.seek(0)
-    
-    return StreamingResponse(
-        io.BytesIO(zip_buffer.read()),
-        media_type="application/zip",
-        headers={"Content-Disposition": f"attachment; filename=website-{website_id}.zip"}
-    )
-
-# Template generation for previews
-@app.get("/template/{website_id}")
-async def get_website_template(website_id: str):
-    """Get website template data"""
-    if website_id not in website_storage:
-        raise HTTPException(status_code=404, detail="Website not found")
-    
-    website_data = website_storage[website_id]
-    
-    if website_data.status != "completed":
-        raise HTTPException(status_code=404, detail="Website not ready")
+    if website_data["status"] != "completed":
+        raise HTTPException(status_code=400, detail="Website not ready for download")
     
     return {
-        "html": website_data.html_content,
-        "css": website_data.css_content,
-        "js": website_data.js_content,
+        "html": website_data.get("html_content", ""),
+        "css": website_data.get("css_content", ""),
+        "js": website_data.get("js_content", ""),
         "website_id": website_id
     }
 
@@ -452,7 +774,7 @@ async def root():
     """Root endpoint with API information"""
     return {
         "message": "AI Website Generator API is running!",
-        "gemini_model": "gemini-1.5-flash",
+        "gemini_model": "gemini-2.0-flash-exp",
         "version": "1.0.0",
         "endpoints": {
             "generate": "/generate-website",
@@ -476,14 +798,14 @@ async def test_gemini():
             "status": "success", 
             "message": "Gemini API is working correctly",
             "response": response.text,
-            "model": "gemini-1.5-flash"
+            "model": "gemini-2.0-flash-exp"
         }
     except Exception as e:
-        logger.error(f"Gemini API test failed: {e}")
+        logger.error(f"❌ Gemini API test failed: {e}")
         return {
             "status": "error",
             "message": f"Gemini API test failed: {str(e)}",
-            "model": "gemini-1.5-flash"
+            "model": "gemini-2.0-flash-exp"
         }
 
 if __name__ == "__main__":
