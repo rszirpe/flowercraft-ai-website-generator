@@ -104,187 +104,231 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50">
-      {/* ChatGPT-style Professional Header */}
-      <header className="relative bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            {/* Logo Section - ChatGPT style */}
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">🌸</span>
+    <main className="h-screen w-screen overflow-hidden relative">
+      {/* STUNNING COLOR EXPLOSION BACKGROUND */}
+      <div className="absolute inset-0 overflow-hidden">
+        {/* Multiple animated gradient layers */}
+        <div className="absolute inset-0 bg-gradient-to-br from-pink-400 via-purple-500 to-indigo-600 animate-pulse"></div>
+        <div className="absolute inset-0 bg-gradient-to-tl from-yellow-400 via-orange-500 to-red-500 opacity-70 animate-pulse animation-delay-1000"></div>
+        <div className="absolute inset-0 bg-gradient-to-tr from-emerald-400 via-teal-500 to-cyan-600 opacity-60 animate-pulse animation-delay-2000"></div>
+        
+        {/* Floating color orbs */}
+        <div className="absolute top-10 left-10 w-32 h-32 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full blur-xl opacity-80 animate-float"></div>
+        <div className="absolute top-20 right-20 w-40 h-40 bg-gradient-to-r from-violet-500 to-purple-600 rounded-full blur-xl opacity-70 animate-float animation-delay-1000"></div>
+        <div className="absolute bottom-20 left-20 w-36 h-36 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full blur-xl opacity-75 animate-float animation-delay-2000"></div>
+        <div className="absolute bottom-10 right-10 w-28 h-28 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full blur-xl opacity-80 animate-float animation-delay-3000"></div>
+        <div className="absolute top-1/2 left-1/2 w-24 h-24 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full blur-xl opacity-70 animate-float animation-delay-1500 transform -translate-x-1/2 -translate-y-1/2"></div>
+        
+        {/* Radial color bursts */}
+        <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-radial from-pink-500/30 via-purple-500/20 to-transparent animate-spin-slow"></div>
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-radial from-cyan-500/30 via-blue-500/20 to-transparent animate-spin-slow animation-delay-2000"></div>
+        
+        {/* Prismatic overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shimmer"></div>
+      </div>
+
+      {/* FLOATING HEADER WITH VIBRANT BUTTONS */}
+      <header className="absolute top-0 left-0 right-0 z-50 p-6">
+        <div className="flex items-center justify-between">
+          {/* STUNNING LOGO */}
+          <div className="flex items-center space-x-4">
+            <div className="relative group">
+              <div className="w-16 h-16 bg-gradient-to-br from-rose-400 via-pink-500 via-purple-500 to-indigo-600 rounded-full flex items-center justify-center shadow-2xl shadow-pink-500/50 transform hover:scale-110 transition-all duration-500 animate-bloom">
+                <span className="text-white font-black text-2xl filter drop-shadow-lg animate-shimmer">🌸</span>
               </div>
-              <div>
-                <h1 className="text-lg font-semibold text-gray-900">FlowerCraft AI</h1>
-              </div>
+              <div className="absolute -inset-1 bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 rounded-full blur opacity-75 animate-pulse"></div>
             </div>
+            
+            <div>
+              <h1 className="text-3xl font-black bg-gradient-to-r from-white via-pink-100 to-purple-100 bg-clip-text text-transparent filter drop-shadow-lg">
+                FlowerCraft AI
+              </h1>
+              <p className="text-white/90 text-sm font-semibold filter drop-shadow-sm">
+                ✨ Powered by Gemini 2.0 Flash ✨
+              </p>
+            </div>
+          </div>
 
-            {/* Professional Action Buttons - ChatGPT style */}
-            <div className="flex items-center space-x-3">
-              {/* Quick Run Button */}
-              <button
-                onClick={handleQuickDemo}
-                className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-emerald-600 border border-transparent rounded-lg hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all duration-200"
-              >
-                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                Quick Demo
-              </button>
-
-              {/* Download Button with Dropdown */}
-              <div className="relative">
-                <button
-                  onClick={handleDownloadLatest}
-                  disabled={!hasGeneratedWebsites}
-                  className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
-                >
-                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  Download
-                  <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-                
-                {/* Download dropdown */}
-                {showDownloadMenu && (
-                  <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-                    <div className="px-3 py-2 text-xs text-gray-500 border-b border-gray-100">
-                      Recent Websites
-                    </div>
-                    {recentWebsites.map((website) => (
-                      <button
-                        key={website.id}
-                        onClick={() => downloadWebsite(website.id)}
-                        className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center justify-between"
-                      >
-                        <span className="truncate">{website.name}</span>
-                        <span className="text-xs text-gray-400">
-                          {website.size}
-                        </span>
-                      </button>
-                    ))}
-                  </div>
-                )}
+          {/* STUNNING ACTION BUTTONS */}
+          <div className="flex items-center space-x-4">
+            {/* QUICK DEMO - Glowing Button */}
+            <button
+              onClick={handleQuickDemo}
+              className="relative group px-6 py-3 bg-gradient-to-r from-emerald-400 via-teal-500 to-cyan-500 text-white font-bold rounded-full shadow-2xl shadow-emerald-500/50 hover:shadow-emerald-500/70 transform hover:scale-110 transition-all duration-300 animate-glow"
+            >
+              <div className="absolute -inset-1 bg-gradient-to-r from-emerald-400 to-cyan-500 rounded-full blur opacity-60 group-hover:opacity-100 transition-opacity"></div>
+              <div className="relative flex items-center space-x-2">
+                <span className="animate-bounce">🚀</span>
+                <span>Quick Demo</span>
               </div>
+            </button>
 
-              {/* New Website Button */}
-              {(isGenerating || generatedWebsite) && (
-                <button
-                  onClick={handleStartOver}
-                  className="inline-flex items-center px-4 py-2 text-sm font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg hover:bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all duration-200"
-                >
-                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                  </svg>
-                  New Website
-                </button>
+            {/* DOWNLOAD - Spectacular Button */}
+            <div className="relative">
+              <button
+                onClick={handleDownloadLatest}
+                disabled={!hasGeneratedWebsites}
+                className="relative group px-6 py-3 bg-gradient-to-r from-purple-500 via-pink-500 to-rose-500 text-white font-bold rounded-full shadow-2xl shadow-purple-500/50 hover:shadow-purple-500/70 transform hover:scale-110 transition-all duration-300 animate-glow disabled:opacity-50"
+              >
+                <div className="absolute -inset-1 bg-gradient-to-r from-purple-500 to-rose-500 rounded-full blur opacity-60 group-hover:opacity-100 transition-opacity"></div>
+                <div className="relative flex items-center space-x-2">
+                  <span className="animate-bounce animation-delay-500">📥</span>
+                  <span>Download</span>
+                  <span className="animate-bounce animation-delay-1000">⬇️</span>
+                </div>
+              </button>
+              
+              {/* Magical Download Dropdown */}
+              {showDownloadMenu && (
+                <div className="absolute right-0 top-full mt-4 w-64 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 py-3 z-50 animate-slideIn">
+                  <div className="px-4 py-2 text-xs font-semibold text-purple-600 border-b border-purple-100">
+                    ✨ Recent Masterpieces
+                  </div>
+                  {recentWebsites.map((website, index) => (
+                    <button
+                      key={website.id}
+                      onClick={() => downloadWebsite(website.id)}
+                      className="w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 flex items-center justify-between transition-all duration-200"
+                      style={{ animationDelay: `${index * 100}ms` }}
+                    >
+                      <span className="font-medium">{website.name}</span>
+                      <span className="text-xs px-2 py-1 bg-gradient-to-r from-purple-100 to-pink-100 text-purple-600 rounded-full">
+                        {website.size}
+                      </span>
+                    </button>
+                  ))}
+                </div>
               )}
             </div>
+
+            {/* NEW WEBSITE - Magical Button */}
+            {(isGenerating || generatedWebsite) && (
+              <button
+                onClick={handleStartOver}
+                className="relative group px-6 py-3 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white font-bold rounded-full shadow-2xl shadow-indigo-500/50 hover:shadow-indigo-500/70 transform hover:scale-110 transition-all duration-300 animate-glow"
+              >
+                <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-pink-500 rounded-full blur opacity-60 group-hover:opacity-100 transition-opacity"></div>
+                <div className="relative flex items-center space-x-2">
+                  <span className="animate-spin">✨</span>
+                  <span>New Website</span>
+                </div>
+              </button>
+            )}
           </div>
         </div>
       </header>
 
-      <div className="relative max-w-4xl mx-auto px-6 py-12">
-        {!websiteId && (
-          <>
-            {/* ChatGPT-style Hero Section */}
-            <div className="text-center mb-16 space-y-12">
+      {/* SPECTACULAR FULL-SCREEN CONTENT */}
+      <div className="relative z-10 h-full flex items-center justify-center p-8">
+        {!websiteId && !isGenerating && !generatedWebsite && (
+          <div className="w-full max-w-6xl grid lg:grid-cols-2 gap-12 items-center">
+            {/* LEFT SIDE - STUNNING HERO */}
+            <div className="text-center lg:text-left space-y-8">
               <div className="space-y-6">
-                <div className="inline-flex items-center px-4 py-2 bg-emerald-50 text-emerald-700 text-sm font-medium rounded-full border border-emerald-200">
-                  ✨ Powered by Google Gemini AI
+                <div className="inline-flex items-center px-6 py-3 bg-white/20 backdrop-blur-sm text-white text-sm font-bold rounded-full border border-white/30 animate-fadeIn">
+                  🌟 Powered by Gemini 2.0 Flash 🌟
                 </div>
                 
-                <h1 className="text-5xl md:text-6xl font-bold text-gray-900 leading-tight tracking-tight">
-                  Create stunning websites
+                <h1 className="text-6xl lg:text-8xl font-black leading-tight">
+                  <span className="bg-gradient-to-r from-white via-pink-100 to-purple-100 bg-clip-text text-transparent filter drop-shadow-2xl animate-textShimmer">
+                    Create
+                  </span>
                   <br />
-                  <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-                    with AI precision
+                  <span className="bg-gradient-to-r from-yellow-200 via-orange-200 to-red-200 bg-clip-text text-transparent filter drop-shadow-2xl animate-textShimmer animation-delay-500">
+                    Magical
+                  </span>
+                  <br />
+                  <span className="bg-gradient-to-r from-cyan-200 via-blue-200 to-indigo-200 bg-clip-text text-transparent filter drop-shadow-2xl animate-textShimmer animation-delay-1000">
+                    Websites
                   </span>
                 </h1>
                 
-                <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                  Professional websites generated in seconds using advanced AI. 
-                  Perfect for businesses, portfolios, and creative projects.
+                <p className="text-xl lg:text-2xl text-white/90 font-medium leading-relaxed filter drop-shadow-lg">
+                  Experience the magic of AI-powered creativity. 
+                  Professional websites that bloom with beauty and intelligence! 🌺✨
                 </p>
-              </div>
 
-              {/* ChatGPT-style Feature Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-                <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                    <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                    </svg>
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Lightning Fast</h3>
-                  <p className="text-gray-600 text-sm">Generate professional websites in under 30 seconds with AI-powered efficiency.</p>
-                </div>
-                
-                <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                  <div className="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center mb-4">
-                    <svg className="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                    </svg>
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Beautiful Design</h3>
-                  <p className="text-gray-600 text-sm">Every website is crafted with modern design principles and responsive layouts.</p>
-                </div>
-                
-                <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                  <div className="w-12 h-12 bg-violet-100 rounded-lg flex items-center justify-center mb-4">
-                    <svg className="w-6 h-6 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                    </svg>
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">AI-Powered</h3>
-                  <p className="text-gray-600 text-sm">Advanced Gemini AI understands your vision and creates custom content.</p>
+                {/* SPECTACULAR FEATURE BADGES */}
+                <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
+                  {[
+                    { text: 'AI Magic', colors: 'from-pink-500 to-rose-500', icon: '🤖' },
+                    { text: 'Lightning Fast', colors: 'from-yellow-500 to-orange-500', icon: '⚡' },
+                    { text: 'Stunning Design', colors: 'from-purple-500 to-indigo-500', icon: '🎨' },
+                    { text: 'Mobile Perfect', colors: 'from-emerald-500 to-teal-500', icon: '📱' },
+                  ].map((badge, index) => (
+                    <div
+                      key={index}
+                      className={`px-4 py-2 bg-gradient-to-r ${badge.colors} text-white rounded-full font-bold text-sm shadow-xl transform hover:scale-110 transition-all duration-300 animate-bounce`}
+                      style={{ animationDelay: `${index * 200}ms` }}
+                    >
+                      <span className="mr-2">{badge.icon}</span>
+                      {badge.text}
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
 
-            {/* Website Form */}
-            <WebsiteForm onWebsiteGenerated={handleWebsiteGenerated} />
-          </>
+            {/* RIGHT SIDE - MAGICAL FORM */}
+            <div className="relative">
+              <div className="absolute -inset-4 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 rounded-3xl blur-lg opacity-60 animate-pulse"></div>
+              <div className="relative bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/50 p-8 animate-slideUp">
+                <WebsiteForm onWebsiteGenerated={handleWebsiteGenerated} />
+              </div>
+            </div>
+          </div>
         )}
 
+        {/* GENERATION STATUS - FULL SCREEN SPECTACLE */}
         {isGenerating && websiteId && (
-          <GenerationStatus 
-            websiteId={websiteId} 
-            onComplete={handleGenerationComplete}
-          />
+          <div className="w-full h-full flex items-center justify-center">
+            <div className="relative max-w-2xl w-full">
+              <div className="absolute -inset-8 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 rounded-3xl blur-xl opacity-60 animate-pulse"></div>
+              <div className="relative bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/50 p-12">
+                <GenerationStatus 
+                  websiteId={websiteId} 
+                  onComplete={handleGenerationComplete}
+                />
+              </div>
+            </div>
+          </div>
         )}
 
+        {/* PREVIEW - SPECTACULAR FULL SCREEN */}
         {generatedWebsite && (
-          <WebsitePreview 
-            website={generatedWebsite}
-            onStartOver={handleStartOver}
-          />
+          <div className="w-full h-full flex items-center justify-center">
+            <div className="relative max-w-6xl w-full">
+              <div className="absolute -inset-8 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 rounded-3xl blur-xl opacity-60 animate-pulse"></div>
+              <div className="relative bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/50 p-8">
+                <WebsitePreview 
+                  website={generatedWebsite}
+                  onStartOver={handleStartOver}
+                />
+              </div>
+            </div>
+          </div>
         )}
       </div>
 
-      {/* ChatGPT-style Clean Footer */}
-      <footer className="relative bg-gray-50/50 border-t border-gray-200/50 mt-20">
-        <div className="max-w-4xl mx-auto px-6 py-8">
-          <div className="text-center space-y-4">
-            <div className="flex items-center justify-center space-x-2 text-lg font-semibold text-gray-700">
-              <span>🌸</span>
-              <span>FlowerCraft AI</span>
+      {/* FLOATING STATS - NO FOOTER NEEDED */}
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20">
+        <div className="flex space-x-6">
+          {[
+            { number: '15+', label: 'Website Types', color: 'from-pink-500 to-rose-500' },
+            { number: '10K+', label: 'AI Characters', color: 'from-purple-500 to-indigo-500' },
+            { number: '<30s', label: 'Generation', color: 'from-cyan-500 to-blue-500' },
+          ].map((stat, index) => (
+            <div
+              key={index}
+              className={`px-4 py-3 bg-gradient-to-r ${stat.color} text-white rounded-2xl shadow-xl backdrop-blur-sm border border-white/20 text-center animate-bounce`}
+              style={{ animationDelay: `${index * 300}ms` }}
+            >
+              <div className="text-lg font-black">{stat.number}</div>
+              <div className="text-xs font-medium opacity-90">{stat.label}</div>
             </div>
-            <p className="text-gray-500 text-sm max-w-2xl mx-auto">
-              Beautiful websites crafted with AI precision. 
-              Built with Next.js, FastAPI, and Google Gemini AI.
-            </p>
-            <div className="flex justify-center items-center space-x-4 text-xs text-gray-400">
-              <span>© 2024 FlowerCraft AI</span>
-              <span>•</span>
-              <span>Made with 🌸 and AI</span>
-            </div>
-          </div>
+          ))}
         </div>
-      </footer>
+      </div>
     </main>
   )
 }
